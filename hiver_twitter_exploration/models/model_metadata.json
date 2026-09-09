@@ -1,0 +1,46 @@
+{
+  "model_name": "tfidf_logistic_regression",
+  "model_version": "v1.0-weak-prototype",
+  "training_file": "data\\weak_labels\\applesupport_train_weak_labels.csv",
+  "training_row_count": 25760,
+  "raw_train_row_count": 82077,
+  "label_type": "weak_silver_labels",
+  "weak_confidence_filter": "high_and_medium_for_explicit_intents_with_fallback",
+  "other_or_unclear_fallback_method": "Deterministic random subsample of exactly 2,000 low-confidence rows (seed 42) because other_or_unclear had 0 high/medium rows in weak labeling heuristics.",
+  "random_seed": 42,
+  "class_counts": {
+    "software_update_or_os_issue": 16326,
+    "connectivity_and_network": 2457,
+    "other_or_unclear": 2000,
+    "device_performance_or_hardware": 1952,
+    "apps_services_or_icloud": 1466,
+    "account_access_and_apple_id": 631,
+    "billing_subscription_or_purchase": 558,
+    "repair_replacement_or_order": 370
+  },
+  "all_eight_classes_present": true,
+  "vectorizer_parameters": {
+    "lowercase": true,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "min_df": 2,
+    "max_features": 30000,
+    "sublinear_tf": true
+  },
+  "classifier_parameters": {
+    "class_weight": "balanced",
+    "random_state": 42,
+    "max_iter": 2000,
+    "solver": "lbfgs"
+  },
+  "training_timestamp": "2026-09-09T10:43:29.481923+00:00",
+  "known_limitations": [
+    "Trained on rule-generated silver labels, NOT human ground truth.",
+    "other_or_unclear is a fallback bucket created when keyword rules fail; it is not a clean semantic category.",
+    "Predicted confidence is a model probability estimate from a weak-label prototype. It is not yet calibrated against human ground truth.",
+    "Because training uses class balancing and a controlled other_or_unclear sample, predicted class frequencies are not expected to represent real AppleSupport traffic frequencies.",
+    "Model will inherit systematic blind spots of keyword rules until fine-tuned or evaluated against the adjudicated human golden set."
+  ]
+}

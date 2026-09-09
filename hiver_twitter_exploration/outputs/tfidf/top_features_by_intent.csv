@@ -1,0 +1,161 @@
+intent,rank,feature,coefficient
+account_access_and_apple_id,1,password,10.0113
+account_access_and_apple_id,2,hacked,9.8092
+account_access_and_apple_id,3,phishing,9.2968
+account_access_and_apple_id,4,apple id,7.1119
+account_access_and_apple_id,5,id,6.2728
+account_access_and_apple_id,6,code,5.3526
+account_access_and_apple_id,7,reset,5.1045
+account_access_and_apple_id,8,2fa,5.035
+account_access_and_apple_id,9,verification code,4.957
+account_access_and_apple_id,10,two factor,4.7576
+account_access_and_apple_id,11,factor,4.6669
+account_access_and_apple_id,12,verification,4.6119
+account_access_and_apple_id,13,account,4.1914
+account_access_and_apple_id,14,security,4.1197
+account_access_and_apple_id,15,forgot,3.9334
+account_access_and_apple_id,16,passcode,3.8479
+account_access_and_apple_id,17,locked,3.658
+account_access_and_apple_id,18,trusted,3.5212
+account_access_and_apple_id,19,change,3.3906
+account_access_and_apple_id,20,email,3.3558
+apps_services_or_icloud,1,siri,17.0234
+apps_services_or_icloud,2,imessage,15.8676
+apps_services_or_icloud,3,facetime,13.0855
+apps_services_or_icloud,4,apple pay,6.7017
+apps_services_or_icloud,5,keychain,5.9265
+apps_services_or_icloud,6,icloud,5.4918
+apps_services_or_icloud,7,pay,5.1323
+apps_services_or_icloud,8,storage,4.2813
+apps_services_or_icloud,9,icloud storage,4.2034
+apps_services_or_icloud,10,apple music,4.1973
+apps_services_or_icloud,11,photos app,4.1441
+apps_services_or_icloud,12,photos,3.7666
+apps_services_or_icloud,13,icloud backup,3.5859
+apps_services_or_icloud,14,app,3.4947
+apps_services_or_icloud,15,backup,3.4001
+apps_services_or_icloud,16,app store,3.2486
+apps_services_or_icloud,17,my imessage,3.0476
+apps_services_or_icloud,18,library,3.0242
+apps_services_or_icloud,19,music,2.8727
+apps_services_or_icloud,20,notes app,2.834
+billing_subscription_or_purchase,1,refund,15.1831
+billing_subscription_or_purchase,2,subscription,13.281
+billing_subscription_or_purchase,3,billing,9.9391
+billing_subscription_or_purchase,4,receipt,8.6535
+billing_subscription_or_purchase,5,declined,8.2944
+billing_subscription_or_purchase,6,charged,6.6507
+billing_subscription_or_purchase,7,subscriptions,6.2098
+billing_subscription_or_purchase,8,payment,5.2984
+billing_subscription_or_purchase,9,payment method,4.2743
+billing_subscription_or_purchase,10,method,3.9765
+billing_subscription_or_purchase,11,my billing,3.4725
+billing_subscription_or_purchase,12,for,3.3633
+billing_subscription_or_purchase,13,purchase,3.2617
+billing_subscription_or_purchase,14,twice,2.9793
+billing_subscription_or_purchase,15,my subscription,2.917
+billing_subscription_or_purchase,16,charged me,2.8987
+billing_subscription_or_purchase,17,cancel,2.8506
+billing_subscription_or_purchase,18,get refund,2.7063
+billing_subscription_or_purchase,19,want refund,2.6419
+billing_subscription_or_purchase,20,itunes,2.5646
+connectivity_and_network,1,wifi,19.096
+connectivity_and_network,2,bluetooth,16.6222
+connectivity_and_network,3,cellular,8.9815
+connectivity_and_network,4,airdrop,8.1329
+connectivity_and_network,5,lte,6.7672
+connectivity_and_network,6,hotspot,5.8002
+connectivity_and_network,7,4g,5.7265
+connectivity_and_network,8,no service,5.7123
+connectivity_and_network,9,sim,4.3228
+connectivity_and_network,10,sim card,4.2782
+connectivity_and_network,11,service,4.2583
+connectivity_and_network,12,wi fi,4.0952
+connectivity_and_network,13,fi,4.0806
+connectivity_and_network,14,wi,4.0278
+connectivity_and_network,15,connection,3.4035
+connectivity_and_network,16,data,3.289
+connectivity_and_network,17,connect,2.9794
+connectivity_and_network,18,my bluetooth,2.7831
+connectivity_and_network,19,connected,2.7027
+connectivity_and_network,20,my wifi,2.6348
+device_performance_or_hardware,1,charger,15.4174
+device_performance_or_hardware,2,battery,9.7729
+device_performance_or_hardware,3,battery life,8.2217
+device_performance_or_hardware,4,life,7.6384
+device_performance_or_hardware,5,charging,5.0487
+device_performance_or_hardware,6,battery drain,4.6501
+device_performance_or_hardware,7,screen,4.6302
+device_performance_or_hardware,8,drain,4.4758
+device_performance_or_hardware,9,overheating,4.3099
+device_performance_or_hardware,10,unresponsive,4.086
+device_performance_or_hardware,11,sluggish,3.9436
+device_performance_or_hardware,12,battery draining,3.8241
+device_performance_or_hardware,13,battery health,3.6401
+device_performance_or_hardware,14,not charging,3.5336
+device_performance_or_hardware,15,the charger,3.2751
+device_performance_or_hardware,16,cracked,3.2721
+device_performance_or_hardware,17,charge,3.1467
+device_performance_or_hardware,18,battery percentage,3.1144
+device_performance_or_hardware,19,percentage,3.1109
+device_performance_or_hardware,20,health,2.9718
+other_or_unclear,1,fix,2.6389
+other_or_unclear,2,the letter,1.7628
+other_or_unclear,3,letter,1.7109
+other_or_unclear,4,fix this,1.5804
+other_or_unclear,5,version 11,1.5325
+other_or_unclear,6,dm,1.5309
+other_or_unclear,7,this,1.4766
+other_or_unclear,8,and it,1.472
+other_or_unclear,9,seem,1.3031
+other_or_unclear,10,yes,1.2879
+other_or_unclear,11,autocorrect,1.2607
+other_or_unclear,12,this update,1.2513
+other_or_unclear,13,type,1.2425
+other_or_unclear,14,with my,1.1785
+other_or_unclear,15,this glitch,1.1463
+other_or_unclear,16,the newest,1.0978
+other_or_unclear,17,these,1.079
+other_or_unclear,18,doing,1.062
+other_or_unclear,19,the apple,1.0183
+other_or_unclear,20,shit,1.0156
+repair_replacement_or_order,1,applecare,14.6647
+repair_replacement_or_order,2,apple care,10.9068
+repair_replacement_or_order,3,care,10.1675
+repair_replacement_or_order,4,genius bar,8.5105
+repair_replacement_or_order,5,genius,8.0565
+repair_replacement_or_order,6,bar,7.2297
+repair_replacement_or_order,7,of warranty,4.8303
+repair_replacement_or_order,8,warranty,4.6953
+repair_replacement_or_order,9,order status,4.0597
+repair_replacement_or_order,10,repair,3.9302
+repair_replacement_or_order,11,order,3.8243
+repair_replacement_or_order,12,status,3.5496
+repair_replacement_or_order,13,apple,3.2119
+repair_replacement_or_order,14,appointment,2.8217
+repair_replacement_or_order,15,cost,2.7317
+repair_replacement_or_order,16,out of,2.6617
+repair_replacement_or_order,17,book,2.3553
+repair_replacement_or_order,18,screen repair,2.2479
+repair_replacement_or_order,19,the genius,2.2244
+repair_replacement_or_order,20,tracking number,1.9564
+software_update_or_os_issue,1,ios11,16.0542
+software_update_or_os_issue,2,ios 11,15.2169
+software_update_or_os_issue,3,ios,11.7129
+software_update_or_os_issue,4,11,9.6341
+software_update_or_os_issue,5,update,8.8483
+software_update_or_os_issue,6,new update,7.0809
+software_update_or_os_issue,7,updated my,5.2875
+software_update_or_os_issue,8,latest update,4.6884
+software_update_or_os_issue,9,new,4.6543
+software_update_or_os_issue,10,new ios,4.4332
+software_update_or_os_issue,11,updated,4.4233
+software_update_or_os_issue,12,software update,3.8459
+software_update_or_os_issue,13,since,3.1511
+software_update_or_os_issue,14,after,3.1072
+software_update_or_os_issue,15,my phone,3.0707
+software_update_or_os_issue,16,update my,3.0556
+software_update_or_os_issue,17,the new,2.7419
+software_update_or_os_issue,18,mark box,2.6245
+software_update_or_os_issue,19,the update,2.4952
+software_update_or_os_issue,20,since updated,2.4297

@@ -1,0 +1,39 @@
+{
+  "index_name": "applesupport_train_retrieval_index",
+  "index_scope": "train_only",
+  "source_file": "data\\processed\\applesupport_train.csv",
+  "source_file_sha256": "ade17dd3b359c08157773e4290f6fa5dc8dd19aa152d5d14417faa389326ad19",
+  "source_interaction_pair_count": 82077,
+  "indexed_unique_customer_inquiries": 82063,
+  "multi_reply_customer_count": 14,
+  "unique_conversation_group_count": 63703,
+  "matrix_shape": [
+    82063,
+    50000
+  ],
+  "matrix_nnz": 2254114,
+  "vectorizer_parameters": {
+    "lowercase": true,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "min_df": 2,
+    "max_features": 50000,
+    "sublinear_tf": true,
+    "norm": "l2"
+  },
+  "created_timestamp": "2026-09-09T11:10:19.515434+00:00",
+  "design_principles": [
+    "One searchable document equals exactly one unique customer inquiry (customer_tweet_id).",
+    "Multiple AppleSupport replies to the same customer inquiry are aggregated into structured fields.",
+    "TfidfVectorizer explicitly uses norm='l2' so dot product is exact cosine similarity.",
+    "Historical evidence text is sanitized: @mentions -> [USER], URLs -> [URL]."
+  ],
+  "epistemic_warning": "A high TF-IDF cosine score means the new message and historical message share important words or phrases. It does not prove the historical reply is relevant, factually applicable, safe, or appropriate for the new customer.",
+  "known_limitations": [
+    "Index contains ONLY historical training data (applesupport_train.csv). Validation, test, and golden sets are strictly excluded.",
+    "Historical replies represent past brand communication patterns, NOT proof of a current customer's eligibility, warranty, or device status.",
+    "TF-IDF cosine similarity measures lexical n-gram overlap, not deep semantic intent or factual safety."
+  ]
+}
