@@ -3,14 +3,6 @@
 .env.*
 *.env
 
-# Large datasets and raw files (>50MB)
-twcs/
-twcs.csv
-*.zip
-*.tar.gz
-hiver_twitter_exploration/data/weak_labels/applesupport_train_weak_labels.csv
-hiver_twitter_exploration/data/processed/applesupport_pairs_all.csv
-
 # Python bytecode and caches
 __pycache__/
 *.py[cod]

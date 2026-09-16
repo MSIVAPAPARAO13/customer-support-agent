@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AppleSupport AI Agent | Real-Time Conversational Support System</title>
+  <meta name="description" content="Production-grade AI customer support agent pipeline for AppleSupport Twitter interactions with intent classification, historical evidence retrieval, safety drafting, and risk routing.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="dark-theme">
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-badge">
+          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">AppleSupport AI Agent</h1>
+          <p class="brand-subtitle">Grounded NLP Support Engine & Risk-Aware Routing</p>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <nav class="nav-tabs" role="tablist">
+          <button class="tab-btn active" id="tab-live-studio" role="tab" aria-selected="true" data-tab="live-studio">
+            Live Support Studio
+          </button>
+          <button class="tab-btn" id="tab-pipeline-architecture" role="tab" aria-selected="false" data-tab="architecture">
+            Pipeline Topology
+          </button>
+          <button class="tab-btn" id="tab-golden-benchmark" role="tab" aria-selected="false" data-tab="golden">
+            Golden Benchmark
+            <span class="badge-counter" id="golden-status-badge">Phase 10</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="header-status">
+        <div class="status-indicator">
+          <span class="pulse-dot"></span>
+          <span class="status-label">Offline Prototype Guarded</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- TAB 1: Live Studio -->
+      <section id="pane-live-studio" class="tab-pane active">
+        <div class="studio-grid">
+          <!-- Left Column: Input & Controls -->
+          <div class="input-panel glass-card">
+            <div class="panel-header">
+              <div class="panel-title-wrap">
+                <span class="panel-step">INPUT</span>
+                <h2 class="panel-title">Customer Inquiry</h2>
+              </div>
+              <button class="btn-ghost-sm" id="btn-clear-input" title="Clear Text">Clear</button>
+            </div>
+
+            <!-- Pre-loaded Quick Inquiries -->
+            <div class="quick-samples-section">
+              <label class="section-label">Quick Test Scenarios:</label>
+              <div class="sample-chips" id="sample-chips-container">
+                <!-- Dynamically populated via JS -->
+              </div>
+            </div>
+
+            <!-- Custom Query Textarea -->
+            <div class="input-wrap">
+              <textarea 
+                id="customer-query-input" 
+                rows="4" 
+                placeholder="Type or paste a customer support tweet (e.g. @AppleSupport my iPhone battery dies in 2 hours after iOS 11 update!)..."
+              ></textarea>
+              <div class="input-footer">
+                <span class="char-count" id="query-char-count">0 characters</span>
+                <span class="shortcut-tip">Press <strong>Ctrl + Enter</strong> to run</span>
+              </div>
+            </div>
+
+            <!-- Collapsible Threshold Parameters -->
+            <details class="controls-details" id="threshold-details">
+              <summary class="controls-summary">
+                <span>Advanced Decision Thresholds</span>
+                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6"/></svg>
+              </summary>
+              <div class="controls-body">
+                <div class="slider-group">
+                  <div class="slider-label-row">
+                    <label for="slider-confidence">Intent Confidence Gate</label>
+                    <span class="slider-val" id="val-confidence">0.80</span>
+                  </div>
+                  <input type="range" id="slider-confidence" min="0.50" max="0.95" step="0.05" value="0.80">
+                  <span class="slider-hint">Inquiries with intent confidence below this trigger escalation.</span>
+                </div>
+
+                <div class="slider-group">
+                  <div class="slider-label-row">
+                    <label for="slider-similarity">Historical Similarity Gate</label>
+                    <span class="slider-val" id="val-similarity">0.50</span>
+                  </div>
+                  <input type="range" id="slider-similarity" min="0.20" max="0.80" step="0.05" value="0.50">
+                  <span class="slider-hint">Retrieval cosine similarity below this triggers escalation.</span>
+                </div>
+              </div>
+            </details>
+
+            <button class="btn-primary" id="btn-run-agent">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              <span>Execute End-to-End Pipeline</span>
+            </button>
+          </div>
+
+          <!-- Right Column: Interactive Diagnostic Pipeline -->
+          <div class="output-pipeline">
+            <!-- Stage 5 Result: Final Routing Decision Banner -->
+            <div class="glass-card decision-banner-card" id="card-decision-banner">
+              <div class="decision-placeholder" id="decision-placeholder">
+                <div class="empty-state-icon">⚡</div>
+                <h3>Awaiting Customer Inquiry</h3>
+                <p>Select a quick scenario above or type a customer question to execute the full 5-stage inference pipeline.</p>
+              </div>
+
+              <div class="decision-content hidden" id="decision-content">
+                <div class="decision-header">
+                  <div class="action-badge-wrap">
+                    <span class="decision-tag" id="decision-action-tag">ACTION</span>
+                    <h3 class="decision-title" id="decision-action-title">DECISION</h3>
+                  </div>
+                  <div class="decision-meta">
+                    <span class="status-pill" id="decision-status-pill">offline_candidate_not_sent</span>
+                  </div>
+                </div>
+
+                <div class="reason-chips-row">
+                  <span class="reason-chip primary" id="decision-primary-reason">primary_reason</span>
+                  <span class="reason-chip secondary hidden" id="decision-all-reasons">all_reasons</span>
+                </div>
+
+                <p class="decision-explanation" id="decision-explanation-text">
+                  Policy explanation will appear here.
+                </p>
+              </div>
+            </div>
+
+            <!-- Stage 4: Safe Grounded Draft Reply -->
+            <div class="glass-card pipeline-stage-card hidden" id="card-stage-draft">
+              <div class="stage-header">
+                <div class="stage-tag">STAGE 4: SAFE GROUNDED DRAFT REPLY</div>
+                <div class="draft-modes-wrap">
+                  <span class="mode-pill" id="draft-mode-pill">draft_mode</span>
+                  <span class="safety-pill" id="draft-safety-pill">Safety: Clean</span>
+                </div>
+              </div>
+              <div class="draft-box">
+                <p class="draft-text" id="draft-reply-text"></p>
+                <div class="draft-actions">
+                  <button class="btn-copy" id="btn-copy-draft" title="Copy reply to clipboard">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <span>Copy Draft</span>
+                  </button>
+                </div>
+              </div>
+              <div class="grounding-note-box">
+                <span class="grounding-label">Grounding Rationale:</span>
+                <span class="grounding-text" id="draft-grounding-note"></span>
+              </div>
+            </div>
+
+            <!-- Two-Column Intermediate Diagnostics: Intent vs Retrieval -->
+            <div class="diagnostics-grid hidden" id="card-stage-diagnostics">
+              <!-- Stage 2: Intent Classification -->
+              <div class="glass-card diag-card">
+                <div class="stage-header">
+                  <div class="stage-tag">STAGE 2: INTENT CLASSIFIER</div>
+                  <span class="conf-badge" id="intent-conf-badge">95.4%</span>
+                </div>
+                <div class="intent-primary-display">
+                  <span class="intent-code" id="intent-primary-code">software_update_or_os_issue</span>
+                  <span class="human-review-flag hidden" id="intent-review-flag">⚠️ Human Review Gated</span>
+                </div>
+
+                <div class="probability-bars-container" id="prob-bars-container">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+
+              <!-- Stage 3: Historical Evidence Retrieval -->
+              <div class="glass-card diag-card">
+                <div class="stage-header">
+                  <div class="stage-tag">STAGE 3: HISTORICAL EVIDENCE</div>
+                  <span class="sim-badge" id="retrieval-sim-badge">Sim: 0.68</span>
+                </div>
+                <div class="retrieval-summary">
+                  <span class="band-tag" id="retrieval-band-tag">moderate_lexical_evidence</span>
+                  <span class="evidence-count" id="retrieval-count-tag">3 Matches Retrieved</span>
+                </div>
+
+                <div class="retrieved-candidates-list" id="retrieved-candidates-container">
+                  <!-- Populated via JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Stage 1: Input Normalization Card -->
+            <div class="glass-card pipeline-stage-card hidden" id="card-stage-preprocessing">
+              <div class="stage-header">
+                <div class="stage-tag">STAGE 1: TEXT NORMALIZATION & SANITIZATION</div>
+              </div>
+              <div class="normalized-preview-box">
+                <div class="preview-line">
+                  <span class="meta-label">Cleaned Input:</span>
+                  <code class="clean-text" id="norm-clean-text"></code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: Architecture & Topology -->
+      <section id="pane-architecture" class="tab-pane hidden">
+        <div class="arch-container glass-card">
+          <h2 class="section-title">End-to-End System Topology (Phases 1–10)</h2>
+          <p class="section-intro">
+            A production-ready conversational customer support system designed with mathematical rigor to eliminate data leakage, prevent conversational hallucinations, and prioritize brand safety.
+          </p>
+
+          <div class="arch-steps-grid">
+            <div class="arch-step-card">
+              <div class="step-num">01</div>
+              <h3>Data Exploration</h3>
+              <p>Reconstructs parent tweet pointers (<code>in_response_to_tweet_id</code>) across 2.81M tweets in <code>twcs.csv</code> to isolate 106,646 authentic @AppleSupport interaction pairs.</p>
+            </div>
+
+            <div class="arch-step-card">
+              <div class="step-num">02</div>
+              <h3>Anti-Leakage Splitting</h3>
+              <p>Groups multi-turn threads by <code>conversation_root_or_group_id</code> (80% Train, 10% Val, 10% Test) to guarantee 0% cross-partition conversational data leakage.</p>
+            </div>
+
+            <div class="arch-step-card">
+              <div class="step-num">03</div>
+              <h3>8-Class Taxonomy</h3>
+              <p>Inductively mines recurring failure modes on training inquiries to establish 8 actionable intents, avoiding generic e-commerce categories.</p>
+            </div>
+
+            <div class="arch-step-card">
+              <div class="step-num">04 & 05</div>
+              <h3>Weak Labels & Baselines</h3>
+              <p>Generates transparent silver labels exclusively for training/val data and compares against Majority-Class and Regex heuristic baselines.</p>
+            </div>
+
+            <div class="arch-step-card">
+              <div class="step-num">06</div>
+              <h3>Explainable Classifier</h3>
+              <p>Sublinear TF-IDF (1–2 n-grams, 30,000 features) + balanced Logistic Regression with softmax probabilities and low-confidence human review gating.</p>
+            </div>
+
+            <div class="arch-step-card">
+              <div class="step-num">07</div>
+              <h3>Train-Only Retrieval</h3>
+              <p>In-memory sparse cosine similarity over 82,063 unique historical training inquiries. Strict lexical similarity bands prevent false confidence.</p>
+            </div>
+
+            <div class="arch-step-card">
+              <div class="step-num">08</div>
+              <h3>Safe Reply Drafting</h3>
+              <p>Deterministic template adaptation with regex safety detectors. Prohibits credential requests, fake URLs, or fabricated promises.</p>
+            </div>
+
+            <div class="arch-step-card">
+              <div class="step-num">09</div>
+              <h3>Risk-Aware Routing</h3>
+              <p>Prioritizes safety: 100% of sensitive domains (passwords, refunds, repairs) escalate to humans. Only low-risk, high-confidence queries qualify for auto-handling.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: Golden Benchmark Studio -->
+      <section id="pane-golden" class="tab-pane hidden">
+        <div class="golden-container glass-card">
+          <div class="golden-hero">
+            <div>
+              <h2 class="section-title">Phase 10: Human Golden Evaluation Benchmark</h2>
+              <p class="section-intro">
+                200 held-out customer inquiries sampled strictly from <code>applesupport_test.csv</code>. To preserve scientific validity, headline metrics remain cryptographically guarded until human adjudication is completed.
+              </p>
+            </div>
+            <div class="golden-metrics-row">
+              <div class="metric-box">
+                <span class="metric-val" id="metric-total-golden">200</span>
+                <span class="metric-lbl">Total Test Rows</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-val" id="metric-done-golden">0</span>
+                <span class="metric-lbl">Adjudicated</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-val" id="metric-pending-golden">200</span>
+                <span class="metric-lbl">Pending Review</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-val" id="metric-freeze-golden">Guarded</span>
+                <span class="metric-lbl">Freeze Manifest</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table of Golden Rows -->
+          <div class="golden-table-wrap">
+            <div class="table-header-controls">
+              <h3>Golden Set Adjudication Inspection (First 50 Rows)</h3>
+              <span class="table-tip">Ground-truth reality benchmark isolated from all training corpora</span>
+            </div>
+            <table class="golden-table" id="golden-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer Inquiry</th>
+                  <th>Annotator A</th>
+                  <th>Annotator B</th>
+                  <th>Final Intent</th>
+                  <th>Final Action</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="golden-table-body">
+                <tr><td colspan="7" class="table-loading">Loading golden rows...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>AppleSupport Conversational AI System • Built with Python, Scikit-Learn & High-Integrity NLP</p>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

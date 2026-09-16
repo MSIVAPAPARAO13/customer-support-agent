@@ -1,0 +1,24 @@
+{
+  "adjudication_file": "data/golden/adjudication_sheet.csv",
+  "adjudication_sha256": "855a55a926cb739617fb130453e8e8ef094331bc0ff56121ac139c982d0c5401",
+  "freeze_timestamp": "2026-09-16T06:12:45.907826+00:00",
+  "golden_row_count": 200,
+  "final_status_summary": {
+    "DONE": 200
+  },
+  "intent_distribution": {
+    "software_update_or_os_issue": 58,
+    "device_performance_or_hardware": 35,
+    "apps_services_or_icloud": 34,
+    "account_access_and_apple_id": 19,
+    "repair_replacement_or_order": 19,
+    "connectivity_and_network": 14,
+    "billing_subscription_or_purchase": 12,
+    "other_or_unclear": 9
+  },
+  "action_distribution": {
+    "auto_handle": 130,
+    "escalate": 70
+  },
+  "anti_tamper_rule": "Golden inference and final evaluation verify this SHA-256 checksum before execution."
+}

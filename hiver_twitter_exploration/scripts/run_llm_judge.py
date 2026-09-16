@@ -86,8 +86,28 @@ def compute_prompt_hash(prompt_text: str) -> str:
     return hashlib.sha256(prompt_text.strip().encode("utf-8")).hexdigest()
 
 
+def load_env_file():
+    """Loads environment variables from .env file if present."""
+    env_path = REPO_ROOT / ".env"
+    if env_path.exists():
+        try:
+            with open(env_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#") or "=" not in line:
+                        continue
+                    k, v = line.split("=", 1)
+                    k = k.strip()
+                    v = v.strip().strip('"').strip("'")
+                    if k and k not in os.environ:
+                        os.environ[k] = v
+        except Exception:
+            pass
+
+
 def detect_provider_and_key() -> Tuple[Optional[str], Optional[str]]:
     """Detects available API provider and corresponding key from environment."""
+    load_env_file()
     if os.getenv("ANTHROPIC_API_KEY"):
         return "anthropic", os.getenv("ANTHROPIC_API_KEY")
     if os.getenv("OPENAI_API_KEY"):
@@ -106,7 +126,7 @@ def format_blind_judge_input(row: pd.Series) -> str:
     action = str(row.get("agent_action", row.get("action", ""))).strip()
     reasons = str(row.get("action_reason_codes", row.get("all_reason_codes", ""))).strip()
     draft = str(row.get("draft_reply", "")).strip()
-    evidence = str(row.get("evidence_snippets", row.get("grounding_note", ""))).strip()
+    evidence = str(row.get("evidence_snippets", row.get("retrieved_evidence_snippets", row.get("grounding_note", "")))).strip()
 
     payload = f"""[CUSTOMER MESSAGE]
 {customer_msg}
@@ -179,6 +199,58 @@ def evaluate_with_openai(payload: str, api_key: str, model: str = "gpt-4o") -> D
         raise RuntimeError(f"OpenAI API call failed: {e}")
 
 
+def evaluate_with_gemini(payload: str, api_key: str, model: str = "gemini-flash-lite-latest") -> Dict[str, Any]:
+    """Calls Google Gemini API via zero-dependency REST endpoint at temperature 0."""
+    import urllib.request
+    import urllib.error
+    import time
+
+    fallback_models = [model, "gemini-3.1-flash-lite", "gemini-3.5-flash-lite"]
+    models_to_try = []
+    for m in fallback_models:
+        if m not in models_to_try:
+            models_to_try.append(m)
+
+    headers = {"Content-Type": "application/json"}
+    body = {
+        "contents": [{"parts": [{"text": payload}]}],
+        "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]},
+        "generationConfig": {
+            "temperature": 0.0,
+            "responseMimeType": "application/json",
+        },
+    }
+    encoded_body = json.dumps(body).encode("utf-8")
+
+    last_err = None
+    for candidate_model in models_to_try:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{candidate_model}:generateContent?key={api_key}"
+        for attempt in range(1, 4):
+            try:
+                req = urllib.request.Request(url, data=encoded_body, headers=headers, method="POST")
+                with urllib.request.urlopen(req, timeout=30) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    raw_text = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    if raw_text.startswith("```"):
+                        raw_text = raw_text.strip("`")
+                        if raw_text.startswith("json"):
+                            raw_text = raw_text[4:]
+                    return json.loads(raw_text.strip())
+            except urllib.error.HTTPError as he:
+                error_body = he.read().decode("utf-8", errors="replace") if hasattr(he, "read") else ""
+                last_err = f"HTTP {he.code}: {error_body}"
+                if he.code in (429, 500, 503):
+                    time.sleep(2 * attempt)
+                    continue
+                break
+            except Exception as e:
+                last_err = str(e)
+                time.sleep(2 * attempt)
+                continue
+
+    raise RuntimeError(f"Gemini API call failed across models {models_to_try}: {last_err}")
+
+
 def run_judge_pipeline(
     input_file: Path,
     output_file: Path,
@@ -216,7 +288,12 @@ def run_judge_pipeline(
         df = df.sample(n=sample_size, random_state=42).reset_index(drop=True)
 
     prompt_hash = compute_prompt_hash(SYSTEM_PROMPT)
-    default_model = "claude-3-5-sonnet-20241022" if selected_provider == "anthropic" else "gpt-4o"
+    if selected_provider == "anthropic":
+        default_model = "claude-3-5-sonnet-20241022"
+    elif selected_provider == "gemini":
+        default_model = "gemini-flash-lite-latest"
+    else:
+        default_model = "gpt-4o"
     active_model = model_name or default_model
 
     print(f"[LLM Judge] Initializing evaluation with Provider: {selected_provider}, Model: {active_model}")
@@ -225,6 +302,7 @@ def run_judge_pipeline(
     results = []
     timestamp = datetime.now(timezone.utc).isoformat()
 
+    import time
     for idx, row in df.iterrows():
         row_id = row.get("golden_id", f"sample_{idx:03d}")
         tweet_id = row.get("customer_tweet_id", "")
@@ -236,6 +314,8 @@ def run_judge_pipeline(
             eval_res = evaluate_with_anthropic(payload, api_key, active_model)
         elif selected_provider == "openai":
             eval_res = evaluate_with_openai(payload, api_key, active_model)
+        elif selected_provider == "gemini":
+            eval_res = evaluate_with_gemini(payload, api_key, active_model)
         else:
             raise ValueError(f"Unsupported provider: {selected_provider}")
 
@@ -257,6 +337,7 @@ def run_judge_pipeline(
             "judge_explanation": eval_res.get("short_explanation", ""),
         })
         print(" Done.")
+        time.sleep(0.5)
 
     df_out = pd.DataFrame(results)
     output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -267,15 +348,26 @@ def run_judge_pipeline(
 
 def main():
     parser = argparse.ArgumentParser(description="Run Blinded LLM-as-a-Judge Evaluation (Phase 10).")
-    parser.add_argument("--input", type=Path, default=REPO_ROOT / "outputs" / "final_evaluation" / "golden_agent_predictions.csv")
+    parser.add_argument("--input", type=Path, default=None, help="Input CSV (default: human_judge_agreement_sheet.csv if exists, else golden_agent_predictions.csv)")
     parser.add_argument("--output", type=Path, default=REPO_ROOT / "outputs" / "final_evaluation" / "llm_judge_outputs.csv")
     parser.add_argument("--provider", type=str, choices=["anthropic", "openai", "gemini"], default=None)
     parser.add_argument("--model", type=str, default=None)
     parser.add_argument("--sample", type=int, default=None)
     args = parser.parse_args()
 
+    input_file = args.input
+    if input_file is None:
+        agreement_sheet = REPO_ROOT / "outputs" / "final_evaluation" / "human_judge_agreement_sheet.csv"
+        golden_preds = REPO_ROOT / "outputs" / "final_evaluation" / "golden_agent_predictions.csv"
+        if agreement_sheet.exists():
+            input_file = agreement_sheet
+            print(f"[LLM Judge] Using stratified agreement sample: {input_file.name}")
+        else:
+            input_file = golden_preds
+            print(f"[LLM Judge] Using golden agent predictions: {input_file.name}")
+
     success = run_judge_pipeline(
-        input_file=args.input,
+        input_file=input_file,
         output_file=args.output,
         provider=args.provider,
         model_name=args.model,

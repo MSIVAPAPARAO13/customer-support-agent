@@ -1,0 +1,66 @@
+{
+  "metadata": {
+    "evaluation_timestamp": "2026-09-16T11:43:08.563199",
+    "golden_sample_size": 200,
+    "manifest_file": "data\\golden\\golden_labels_freeze_manifest.json",
+    "fixed_taxonomy_labels": [
+      "software_update_or_os_issue",
+      "device_performance_or_hardware",
+      "connectivity_and_network",
+      "apps_services_or_icloud",
+      "account_access_and_apple_id",
+      "billing_subscription_or_purchase",
+      "repair_replacement_or_order",
+      "other_or_unclear"
+    ]
+  },
+  "intent_system_comparison": {
+    "majority_weak_intent": {
+      "accuracy": 0.045,
+      "macro_f1": 0.0108
+    },
+    "keyword_rule_classifier": {
+      "accuracy": 0.43,
+      "macro_f1": 0.5332
+    },
+    "tfidf_logistic_regression": {
+      "accuracy": 0.595,
+      "macro_f1": 0.663
+    }
+  },
+  "routing_metrics": {
+    "total_evaluated": 200,
+    "action_accuracy": 0.36,
+    "auto_handle_count": 4,
+    "auto_handle_coverage": 0.02,
+    "unsafe_auto_handle_count": 1,
+    "unsafe_auto_handle_rate": 0.25,
+    "selective_accuracy": 0.75,
+    "agent_escalations": 196,
+    "human_escalations": 70,
+    "escalation_precision": 0.352,
+    "escalation_recall": 0.9857
+  },
+  "bootstrap_confidence_intervals_95": {
+    "intent_accuracy_95ci": [
+      0.525,
+      0.6601
+    ],
+    "macro_f1_95ci": [
+      0.5988,
+      0.7145
+    ],
+    "action_accuracy_95ci": [
+      0.29,
+      0.43
+    ],
+    "auto_handle_coverage_95ci": [
+      0.005,
+      0.04
+    ],
+    "selective_accuracy_95ci": [
+      0.0,
+      1.0
+    ]
+  }
+}

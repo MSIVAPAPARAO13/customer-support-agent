@@ -1,0 +1,9 @@
+true_intent,software_update_or_os_issue,device_performance_or_hardware,connectivity_and_network,apps_services_or_icloud,account_access_and_apple_id,billing_subscription_or_purchase,repair_replacement_or_order,other_or_unclear
+software_update_or_os_issue,34,2,2,1,0,0,0,19
+device_performance_or_hardware,0,17,0,0,0,0,0,18
+connectivity_and_network,0,0,14,0,0,0,0,0
+apps_services_or_icloud,1,0,0,15,0,0,0,18
+account_access_and_apple_id,0,0,0,0,16,0,0,3
+billing_subscription_or_purchase,1,0,0,3,0,8,0,0
+repair_replacement_or_order,0,1,0,0,0,0,9,9
+other_or_unclear,2,0,0,0,1,0,0,6

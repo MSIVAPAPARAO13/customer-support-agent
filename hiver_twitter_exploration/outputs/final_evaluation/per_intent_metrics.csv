@@ -1,0 +1,9 @@
+intent_label,support,majority_precision,majority_recall,majority_f1,rule_precision,rule_recall,rule_f1,main_precision,main_recall,main_f1
+software_update_or_os_issue,58,0.0,0.0,0.0,0.8214,0.3966,0.5349,0.8947,0.5862,0.7083
+device_performance_or_hardware,35,0.0,0.0,0.0,1.0,0.2286,0.3721,0.85,0.4857,0.6182
+connectivity_and_network,14,0.0,0.0,0.0,0.7778,1.0,0.875,0.875,1.0,0.9333
+apps_services_or_icloud,34,0.0,0.0,0.0,0.7692,0.2941,0.4255,0.7895,0.4412,0.566
+account_access_and_apple_id,19,0.0,0.0,0.0,0.9231,0.6316,0.75,0.9412,0.8421,0.8889
+billing_subscription_or_purchase,12,0.0,0.0,0.0,1.0,0.75,0.8571,1.0,0.6667,0.8
+repair_replacement_or_order,19,0.0,0.0,0.0,1.0,0.2105,0.3478,1.0,0.4737,0.6429
+other_or_unclear,9,0.045,1.0,0.0861,0.0561,0.6667,0.1034,0.0822,0.6667,0.1463
