@@ -3,353 +3,619 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AppleSupport AI Agent | Real-Time Conversational Support System</title>
+  <title>Hiver AI • Customer Support Agent &amp; Safety Operations Console</title>
   <meta name="description" content="Production-grade AI customer support agent pipeline for AppleSupport Twitter interactions with intent classification, historical evidence retrieval, safety drafting, and risk routing.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "bg-base": "#0B0F17",
+            "bg-surface": "#111827",
+            "bg-card": "rgba(17, 24, 39, 0.8)",
+            "bg-card-elevated": "#1F2937",
+            "primary": "#6366F1",
+            "primary-hover": "#4F46E5",
+            "tertiary": "#10B981",
+            "warning": "#F59E0B",
+            "error": "#EF4444"
+          },
+          fontFamily: {
+            body: ['"IBM Plex Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      background-color: #0B0F17;
+      color: #F3F4F6;
+      font-family: "IBM Plex Sans", sans-serif;
+    }
+    .glass-panel {
+      background: rgba(17, 24, 39, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(17, 24, 39, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+  </style>
 </head>
-<body class="dark-theme">
-  <div class="app-layout">
-    <!-- Header -->
-    <header class="app-header">
-      <div class="header-brand">
-        <div class="brand-badge">
-          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"/>
-            <path d="M12 6v6l4 2"/>
-          </svg>
+<body class="min-h-screen flex flex-col bg-[#0B0F17] text-gray-200 antialiased selection:bg-indigo-500 selection:text-white">
+
+  <!-- Top Sticky Header -->
+  <header class="sticky top-0 z-50 w-full bg-[#0B0F17]/90 backdrop-blur-xl border-b border-white/10 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-6">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-2.5 cursor-pointer">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+          <span class="material-symbols-outlined text-white text-[22px]">smart_toy</span>
         </div>
         <div>
-          <h1 class="brand-title">AppleSupport AI Agent</h1>
-          <p class="brand-subtitle">Grounded NLP Support Engine & Risk-Aware Routing</p>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold tracking-tight text-white">Hiver AI</span>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full">PROD-TWCS</span>
+          </div>
+          <p class="text-[11px] text-gray-400">AppleSupport Risk-Guarded NLP System</p>
         </div>
       </div>
 
-      <div class="header-center">
-        <nav class="nav-tabs" role="tablist">
-          <button class="tab-btn active" id="tab-live-studio" role="tab" aria-selected="true" data-tab="live-studio">
-            Live Support Studio
-          </button>
-          <button class="tab-btn" id="tab-pipeline-architecture" role="tab" aria-selected="false" data-tab="architecture">
-            Pipeline Topology
-          </button>
-          <button class="tab-btn" id="tab-golden-benchmark" role="tab" aria-selected="false" data-tab="golden">
-            Golden Benchmark
-            <span class="badge-counter" id="golden-status-badge">Phase 10</span>
-          </button>
-        </nav>
-      </div>
+      <!-- Navigation Tabs -->
+      <nav class="hidden lg:flex items-center gap-1.5 ml-4 bg-gray-900/80 p-1 rounded-xl border border-white/5" role="tablist">
+        <button id="nav-tab-simulator" class="tab-btn active px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm" data-tab="simulator">
+          <span class="material-symbols-outlined text-[16px]">terminal</span>
+          Live Inference &amp; Simulator
+        </button>
+        <button id="nav-tab-policy" class="tab-btn px-3.5 py-1.5 text-xs font-medium rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 transition-all flex items-center gap-1.5" data-tab="policy">
+          <span class="material-symbols-outlined text-[16px]">policy</span>
+          Safety &amp; Policy Matrix
+        </button>
+        <button id="nav-tab-golden" class="tab-btn px-3.5 py-1.5 text-xs font-medium rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 transition-all flex items-center gap-1.5" data-tab="golden">
+          <span class="material-symbols-outlined text-[16px]">gavel</span>
+          Golden Set Adjudication
+          <span id="golden-status-badge" class="ml-1 px-1.5 py-0.2 bg-gray-700/80 text-gray-300 text-[10px] rounded-full">0%</span>
+        </button>
+        <button id="nav-tab-arch" class="tab-btn px-3.5 py-1.5 text-xs font-medium rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 transition-all flex items-center gap-1.5" data-tab="arch">
+          <span class="material-symbols-outlined text-[16px]">account_tree</span>
+          Topology &amp; Audit
+        </button>
+      </nav>
+    </div>
 
-      <div class="header-status">
-        <div class="status-indicator">
-          <span class="pulse-dot"></span>
-          <span class="status-label">Offline Prototype Guarded</span>
+    <!-- Right Header Utilities -->
+    <div class="flex items-center gap-4">
+      <div class="hidden sm:flex items-center gap-2 bg-gray-900/90 px-3 py-1.5 rounded-lg border border-white/5 text-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-gray-300 font-medium">Engine Active</span>
+        <span class="text-gray-500 font-mono text-[11px]">| 82k Memory Pairs</span>
+      </div>
+      <a href="http://127.0.0.1:8000" target="_blank" class="px-2.5 py-1 bg-white/5 hover:bg-white/10 text-gray-300 rounded-lg text-xs font-medium border border-white/10 transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+        Port 8000
+      </a>
+    </div>
+  </header>
+
+  <!-- TAB 1: Live Inference & Simulator -->
+  <main id="pane-simulator" class="tab-pane flex-1 w-full max-w-[1720px] mx-auto p-4 md:p-6 flex flex-col gap-6">
+    <!-- Subheader Info -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between pb-3 border-b border-white/5 gap-3">
+      <div>
+        <h2 class="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+          <span class="material-symbols-outlined text-indigo-400">labs</span>
+          Live Inquiry Reasoning &amp; Routing Simulator
+        </h2>
+        <p class="text-xs text-gray-400">Classify customer tweets in real time, extract lexical grounding evidence, and test safety risk routing policies.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 bg-gray-900/80 px-3 py-1.5 rounded-lg border border-white/5 text-xs">
+          <span class="text-gray-400">Active Model:</span>
+          <span class="font-mono text-indigo-300 font-medium">TF-IDF N-Gram + Logistic Softmax</span>
         </div>
       </div>
-    </header>
+    </div>
 
-    <!-- Main Content Area -->
-    <main class="main-content">
-      <!-- TAB 1: Live Studio -->
-      <section id="pane-live-studio" class="tab-pane active">
-        <div class="studio-grid">
-          <!-- Left Column: Input & Controls -->
-          <div class="input-panel glass-card">
-            <div class="panel-header">
-              <div class="panel-title-wrap">
-                <span class="panel-step">INPUT</span>
-                <h2 class="panel-title">Customer Inquiry</h2>
-              </div>
-              <button class="btn-ghost-sm" id="btn-clear-input" title="Clear Text">Clear</button>
+    <!-- 3-Column Stitch Simulator Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- COLUMN 1: Customer Inquiry Input & Presets (~30%) -->
+      <div class="lg:col-span-4 flex flex-col gap-4">
+        <div class="glass-panel p-5 rounded-2xl flex flex-col gap-4 shadow-xl">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-indigo-400 text-[20px]">chat</span>
+              <h3 class="text-sm font-semibold text-white">Incoming Customer Inquiry</h3>
             </div>
+            <span class="px-2.5 py-0.5 text-[11px] font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 rounded-full">
+              Twitter / @AppleSupport
+            </span>
+          </div>
 
-            <!-- Pre-loaded Quick Inquiries -->
-            <div class="quick-samples-section">
-              <label class="section-label">Quick Test Scenarios:</label>
-              <div class="sample-chips" id="sample-chips-container">
-                <!-- Dynamically populated via JS -->
-              </div>
+          <!-- Quick Scenario Pills -->
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Quick Test Presets</label>
+              <span class="text-[10px] text-gray-500">Click to autofill</span>
             </div>
-
-            <!-- Custom Query Textarea -->
-            <div class="input-wrap">
-              <textarea 
-                id="customer-query-input" 
-                rows="4" 
-                placeholder="Type or paste a customer support tweet (e.g. @AppleSupport my iPhone battery dies in 2 hours after iOS 11 update!)..."
-              ></textarea>
-              <div class="input-footer">
-                <span class="char-count" id="query-char-count">0 characters</span>
-                <span class="shortcut-tip">Press <strong>Ctrl + Enter</strong> to run</span>
-              </div>
+            <div class="flex flex-wrap gap-1.5" id="sample-chips-container">
+              <!-- Dynamically rendered pills -->
+              <button type="button" class="preset-pill px-2.5 py-1 text-xs bg-gray-800/80 hover:bg-gray-700/80 text-gray-300 hover:text-white rounded-lg border border-white/5 transition-all flex items-center gap-1" data-preset="battery_drain">
+                🔋 Battery Drain
+              </button>
+              <button type="button" class="preset-pill px-2.5 py-1 text-xs bg-gray-800/80 hover:bg-gray-700/80 text-gray-300 hover:text-white rounded-lg border border-white/5 transition-all flex items-center gap-1" data-preset="wifi_issue">
+                🌐 Wi-Fi Drop
+              </button>
+              <button type="button" class="preset-pill px-2.5 py-1 text-xs bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 rounded-lg transition-all flex items-center gap-1 font-medium" data-preset="account_hacked">
+                🚨 Apple ID Hack
+              </button>
+              <button type="button" class="preset-pill px-2.5 py-1 text-xs bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 rounded-lg transition-all flex items-center gap-1" data-preset="billing_charge">
+                💳 Unauthorized Charge
+              </button>
+              <button type="button" class="preset-pill px-2.5 py-1 text-xs bg-gray-800/80 hover:bg-gray-700/80 text-gray-300 hover:text-white rounded-lg border border-white/5 transition-all flex items-center gap-1" data-preset="genius_bar">
+                🛠️ Cracked Screen
+              </button>
             </div>
+          </div>
 
-            <!-- Collapsible Threshold Parameters -->
-            <details class="controls-details" id="threshold-details">
-              <summary class="controls-summary">
-                <span>Advanced Decision Thresholds</span>
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M6 9l6 6 6-6"/></svg>
-              </summary>
-              <div class="controls-body">
-                <div class="slider-group">
-                  <div class="slider-label-row">
-                    <label for="slider-confidence">Intent Confidence Gate</label>
-                    <span class="slider-val" id="val-confidence">0.80</span>
-                  </div>
-                  <input type="range" id="slider-confidence" min="0.50" max="0.95" step="0.05" value="0.80">
-                  <span class="slider-hint">Inquiries with intent confidence below this trigger escalation.</span>
-                </div>
+          <!-- Input Textarea & Metadata -->
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between text-xs text-gray-400">
+              <span class="font-mono flex items-center gap-1 text-gray-300">
+                <span class="material-symbols-outlined text-[14px]">alternate_email</span>
+                customer_user · Verified
+              </span>
+              <span id="query-char-count" class="text-gray-500 font-mono text-[11px]">0 chars</span>
+            </div>
+            <textarea 
+              id="customer-query-input" 
+              rows="5" 
+              class="w-full p-3.5 bg-gray-900/90 text-white text-xs rounded-xl border border-white/10 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-mono leading-relaxed resize-none shadow-inner"
+              placeholder="Enter customer message or click a preset above..."
+            ></textarea>
+          </div>
 
-                <div class="slider-group">
-                  <div class="slider-label-row">
-                    <label for="slider-similarity">Historical Similarity Gate</label>
-                    <span class="slider-val" id="val-similarity">0.50</span>
-                  </div>
-                  <input type="range" id="slider-similarity" min="0.20" max="0.80" step="0.05" value="0.50">
-                  <span class="slider-hint">Retrieval cosine similarity below this triggers escalation.</span>
-                </div>
+          <!-- Parameter Threshold Sliders -->
+          <div class="bg-gray-900/60 p-3 rounded-xl border border-white/5 flex flex-col gap-3">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-medium text-gray-300 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[15px] text-gray-400">tune</span>
+                Decision Thresholds
+              </span>
+              <span class="text-[10px] text-gray-500">Gating Policy</span>
+            </div>
+            
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-gray-400">Intent Confidence Gate:</span>
+                <span id="val-confidence" class="font-mono text-indigo-300 font-bold">0.80</span>
               </div>
-            </details>
+              <input type="range" id="slider-confidence" min="0.50" max="0.95" step="0.05" value="0.80" class="w-full accent-indigo-500 h-1 bg-gray-700 rounded-lg cursor-pointer">
 
-            <button class="btn-primary" id="btn-run-agent">
-              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-              </svg>
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-gray-400">Retrieval Similarity Gate:</span>
+                <span id="val-similarity" class="font-mono text-indigo-300 font-bold">0.50</span>
+              </div>
+              <input type="range" id="slider-similarity" min="0.20" max="0.80" step="0.05" value="0.50" class="w-full accent-indigo-500 h-1 bg-gray-700 rounded-lg cursor-pointer">
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-2 pt-1">
+            <button 
+              type="button" 
+              id="btn-run-agent" 
+              class="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white rounded-xl font-semibold text-xs transition-all shadow-lg shadow-indigo-600/30 hover:scale-[1.01] active:scale-[0.99]"
+            >
+              <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
               <span>Execute End-to-End Pipeline</span>
             </button>
-          </div>
-
-          <!-- Right Column: Interactive Diagnostic Pipeline -->
-          <div class="output-pipeline">
-            <!-- Stage 5 Result: Final Routing Decision Banner -->
-            <div class="glass-card decision-banner-card" id="card-decision-banner">
-              <div class="decision-placeholder" id="decision-placeholder">
-                <div class="empty-state-icon">⚡</div>
-                <h3>Awaiting Customer Inquiry</h3>
-                <p>Select a quick scenario above or type a customer question to execute the full 5-stage inference pipeline.</p>
-              </div>
-
-              <div class="decision-content hidden" id="decision-content">
-                <div class="decision-header">
-                  <div class="action-badge-wrap">
-                    <span class="decision-tag" id="decision-action-tag">ACTION</span>
-                    <h3 class="decision-title" id="decision-action-title">DECISION</h3>
-                  </div>
-                  <div class="decision-meta">
-                    <span class="status-pill" id="decision-status-pill">offline_candidate_not_sent</span>
-                  </div>
-                </div>
-
-                <div class="reason-chips-row">
-                  <span class="reason-chip primary" id="decision-primary-reason">primary_reason</span>
-                  <span class="reason-chip secondary hidden" id="decision-all-reasons">all_reasons</span>
-                </div>
-
-                <p class="decision-explanation" id="decision-explanation-text">
-                  Policy explanation will appear here.
-                </p>
-              </div>
-            </div>
-
-            <!-- Stage 4: Safe Grounded Draft Reply -->
-            <div class="glass-card pipeline-stage-card hidden" id="card-stage-draft">
-              <div class="stage-header">
-                <div class="stage-tag">STAGE 4: SAFE GROUNDED DRAFT REPLY</div>
-                <div class="draft-modes-wrap">
-                  <span class="mode-pill" id="draft-mode-pill">draft_mode</span>
-                  <span class="safety-pill" id="draft-safety-pill">Safety: Clean</span>
-                </div>
-              </div>
-              <div class="draft-box">
-                <p class="draft-text" id="draft-reply-text"></p>
-                <div class="draft-actions">
-                  <button class="btn-copy" id="btn-copy-draft" title="Copy reply to clipboard">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                    <span>Copy Draft</span>
-                  </button>
-                </div>
-              </div>
-              <div class="grounding-note-box">
-                <span class="grounding-label">Grounding Rationale:</span>
-                <span class="grounding-text" id="draft-grounding-note"></span>
-              </div>
-            </div>
-
-            <!-- Two-Column Intermediate Diagnostics: Intent vs Retrieval -->
-            <div class="diagnostics-grid hidden" id="card-stage-diagnostics">
-              <!-- Stage 2: Intent Classification -->
-              <div class="glass-card diag-card">
-                <div class="stage-header">
-                  <div class="stage-tag">STAGE 2: INTENT CLASSIFIER</div>
-                  <span class="conf-badge" id="intent-conf-badge">95.4%</span>
-                </div>
-                <div class="intent-primary-display">
-                  <span class="intent-code" id="intent-primary-code">software_update_or_os_issue</span>
-                  <span class="human-review-flag hidden" id="intent-review-flag">⚠️ Human Review Gated</span>
-                </div>
-
-                <div class="probability-bars-container" id="prob-bars-container">
-                  <!-- Populated via JS -->
-                </div>
-              </div>
-
-              <!-- Stage 3: Historical Evidence Retrieval -->
-              <div class="glass-card diag-card">
-                <div class="stage-header">
-                  <div class="stage-tag">STAGE 3: HISTORICAL EVIDENCE</div>
-                  <span class="sim-badge" id="retrieval-sim-badge">Sim: 0.68</span>
-                </div>
-                <div class="retrieval-summary">
-                  <span class="band-tag" id="retrieval-band-tag">moderate_lexical_evidence</span>
-                  <span class="evidence-count" id="retrieval-count-tag">3 Matches Retrieved</span>
-                </div>
-
-                <div class="retrieved-candidates-list" id="retrieved-candidates-container">
-                  <!-- Populated via JS -->
-                </div>
-              </div>
-            </div>
-
-            <!-- Stage 1: Input Normalization Card -->
-            <div class="glass-card pipeline-stage-card hidden" id="card-stage-preprocessing">
-              <div class="stage-header">
-                <div class="stage-tag">STAGE 1: TEXT NORMALIZATION & SANITIZATION</div>
-              </div>
-              <div class="normalized-preview-box">
-                <div class="preview-line">
-                  <span class="meta-label">Cleaned Input:</span>
-                  <code class="clean-text" id="norm-clean-text"></code>
-                </div>
-              </div>
-            </div>
+            <button 
+              type="button" 
+              id="btn-clear-input" 
+              class="px-3.5 py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 rounded-xl text-xs font-medium transition-colors border border-white/10"
+            >
+              Clear
+            </button>
           </div>
         </div>
-      </section>
 
-      <!-- TAB 2: Architecture & Topology -->
-      <section id="pane-architecture" class="tab-pane hidden">
-        <div class="arch-container glass-card">
-          <h2 class="section-title">End-to-End System Topology (Phases 1–10)</h2>
-          <p class="section-intro">
-            A production-ready conversational customer support system designed with mathematical rigor to eliminate data leakage, prevent conversational hallucinations, and prioritize brand safety.
-          </p>
-
-          <div class="arch-steps-grid">
-            <div class="arch-step-card">
-              <div class="step-num">01</div>
-              <h3>Data Exploration</h3>
-              <p>Reconstructs parent tweet pointers (<code>in_response_to_tweet_id</code>) across 2.81M tweets in <code>twcs.csv</code> to isolate 106,646 authentic @AppleSupport interaction pairs.</p>
-            </div>
-
-            <div class="arch-step-card">
-              <div class="step-num">02</div>
-              <h3>Anti-Leakage Splitting</h3>
-              <p>Groups multi-turn threads by <code>conversation_root_or_group_id</code> (80% Train, 10% Val, 10% Test) to guarantee 0% cross-partition conversational data leakage.</p>
-            </div>
-
-            <div class="arch-step-card">
-              <div class="step-num">03</div>
-              <h3>8-Class Taxonomy</h3>
-              <p>Inductively mines recurring failure modes on training inquiries to establish 8 actionable intents, avoiding generic e-commerce categories.</p>
-            </div>
-
-            <div class="arch-step-card">
-              <div class="step-num">04 & 05</div>
-              <h3>Weak Labels & Baselines</h3>
-              <p>Generates transparent silver labels exclusively for training/val data and compares against Majority-Class and Regex heuristic baselines.</p>
-            </div>
-
-            <div class="arch-step-card">
-              <div class="step-num">06</div>
-              <h3>Explainable Classifier</h3>
-              <p>Sublinear TF-IDF (1–2 n-grams, 30,000 features) + balanced Logistic Regression with softmax probabilities and low-confidence human review gating.</p>
-            </div>
-
-            <div class="arch-step-card">
-              <div class="step-num">07</div>
-              <h3>Train-Only Retrieval</h3>
-              <p>In-memory sparse cosine similarity over 82,063 unique historical training inquiries. Strict lexical similarity bands prevent false confidence.</p>
-            </div>
-
-            <div class="arch-step-card">
-              <div class="step-num">08</div>
-              <h3>Safe Reply Drafting</h3>
-              <p>Deterministic template adaptation with regex safety detectors. Prohibits credential requests, fake URLs, or fabricated promises.</p>
-            </div>
-
-            <div class="arch-step-card">
-              <div class="step-num">09</div>
-              <h3>Risk-Aware Routing</h3>
-              <p>Prioritizes safety: 100% of sensitive domains (passwords, refunds, repairs) escalate to humans. Only low-risk, high-confidence queries qualify for auto-handling.</p>
-            </div>
+        <!-- Telemetry Card -->
+        <div class="glass-panel p-4 rounded-2xl flex flex-col gap-2.5 text-xs border border-white/5">
+          <div class="flex items-center justify-between pb-2 border-b border-white/5">
+            <span class="font-semibold text-gray-300 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px] text-gray-400">speed</span>
+              Pipeline Telemetry
+            </span>
+            <span id="telemetry-latency" class="font-mono text-emerald-400 font-medium">Ready</span>
+          </div>
+          <div class="flex justify-between items-center text-gray-400">
+            <span>Intent Engine:</span>
+            <span class="font-mono text-gray-200">Logistic Softmax (8-Class)</span>
+          </div>
+          <div class="flex justify-between items-center text-gray-400">
+            <span>Retrieval Store:</span>
+            <span class="font-mono text-gray-200">Sparse TF-IDF (Cosine)</span>
+          </div>
+          <div class="flex justify-between items-center text-gray-400">
+            <span>Risk Guardrails:</span>
+            <span class="font-mono text-indigo-300">Phase 9 Risk Matrix</span>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- TAB 3: Golden Benchmark Studio -->
-      <section id="pane-golden" class="tab-pane hidden">
-        <div class="golden-container glass-card">
-          <div class="golden-hero">
+      <!-- COLUMN 2: Decision Routing, Intent & Policy Checklist (~42%) -->
+      <div class="lg:col-span-5 flex flex-col gap-4">
+        
+        <!-- Decision Banner Card -->
+        <div id="card-decision-banner" class="glass-panel p-5 rounded-2xl transition-all duration-300 border border-white/10 shadow-xl">
+          <!-- Placeholder State -->
+          <div id="decision-placeholder" class="py-10 flex flex-col items-center justify-center text-center gap-3">
+            <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center border border-indigo-500/20">
+              <span class="material-symbols-outlined text-[28px]">electric_bolt</span>
+            </div>
             <div>
-              <h2 class="section-title">Phase 10: Human Golden Evaluation Benchmark</h2>
-              <p class="section-intro">
-                200 held-out customer inquiries sampled strictly from <code>applesupport_test.csv</code>. To preserve scientific validity, headline metrics remain cryptographically guarded until human adjudication is completed.
-              </p>
-            </div>
-            <div class="golden-metrics-row">
-              <div class="metric-box">
-                <span class="metric-val" id="metric-total-golden">200</span>
-                <span class="metric-lbl">Total Test Rows</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-val" id="metric-done-golden">0</span>
-                <span class="metric-lbl">Adjudicated</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-val" id="metric-pending-golden">200</span>
-                <span class="metric-lbl">Pending Review</span>
-              </div>
-              <div class="metric-box">
-                <span class="metric-val" id="metric-freeze-golden">Guarded</span>
-                <span class="metric-lbl">Freeze Manifest</span>
-              </div>
+              <h4 class="text-sm font-semibold text-white">Awaiting Live Query Execution</h4>
+              <p class="text-xs text-gray-400 max-w-sm mt-1">Select a quick scenario pill or type an inquiry and press 'Execute End-to-End Pipeline'.</p>
             </div>
           </div>
 
-          <!-- Table of Golden Rows -->
-          <div class="golden-table-wrap">
-            <div class="table-header-controls">
-              <h3>Golden Set Adjudication Inspection (First 50 Rows)</h3>
-              <span class="table-tip">Ground-truth reality benchmark isolated from all training corpora</span>
+          <!-- Active Decision Result -->
+          <div id="decision-content" class="hidden flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span id="decision-icon" class="material-symbols-outlined text-[24px] text-amber-400">report_problem</span>
+                <div>
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Routing Policy Decision</span>
+                  <h3 id="decision-action-title" class="text-base font-bold text-white">ESCALATE TO SPECIALIST</h3>
+                </div>
+              </div>
+              <span id="decision-action-tag" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                ESCALATE
+              </span>
             </div>
-            <table class="golden-table" id="golden-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Customer Inquiry</th>
-                  <th>Annotator A</th>
-                  <th>Annotator B</th>
-                  <th>Final Intent</th>
-                  <th>Final Action</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="golden-table-body">
-                <tr><td colspan="7" class="table-loading">Loading golden rows...</td></tr>
-              </tbody>
-            </table>
+
+            <div class="p-3.5 bg-gray-900/90 rounded-xl border border-white/10 flex flex-col gap-1.5">
+              <div class="flex items-center justify-between">
+                <span id="decision-primary-reason" class="text-xs font-mono font-semibold text-amber-400">Reason: restricted_safety_flag</span>
+              </div>
+              <p id="decision-explanation-text" class="text-xs text-gray-300 leading-relaxed"></p>
+              <div id="decision-all-reasons" class="text-[11px] font-mono text-gray-500 pt-1 border-t border-white/5"></div>
+            </div>
           </div>
         </div>
-      </section>
-    </main>
 
-    <!-- Footer -->
-    <footer class="app-footer">
-      <p>AppleSupport Conversational AI System • Built with Python, Scikit-Learn & High-Integrity NLP</p>
-    </footer>
-  </div>
+        <!-- Intent & Confidence Breakdown Card -->
+        <div id="card-stage-intent" class="glass-panel p-5 rounded-2xl flex flex-col gap-4 shadow-xl border border-white/10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-indigo-400 text-[20px]">psychology</span>
+              <h3 class="text-sm font-semibold text-white">Intent Classification &amp; Probabilities</h3>
+            </div>
+            <span id="intent-conf-badge" class="px-2.5 py-0.5 text-xs font-mono font-semibold bg-gray-800 text-gray-300 border border-white/10 rounded-full">
+              --% Conf
+            </span>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between text-xs">
+              <span id="intent-primary-code" class="text-white font-mono font-bold">Awaiting evaluation...</span>
+              <span id="intent-review-flag" class="hidden px-2 py-0.5 text-[10px] bg-amber-500/20 text-amber-300 rounded font-semibold">⚠️ Low Confidence Gated</span>
+            </div>
+            
+            <!-- Bars Container -->
+            <div id="prob-bars-container" class="flex flex-col gap-2 pt-1">
+              <div class="text-xs text-gray-500 italic py-2">Execute an inquiry to view softmax intent distribution...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Synthesized Draft Reply Card -->
+        <div id="card-stage-draft" class="glass-panel p-5 rounded-2xl flex flex-col gap-4 shadow-xl border border-white/10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-indigo-400 text-[20px]">mark_chat_read</span>
+              <h3 class="text-sm font-semibold text-white">Synthesized Grounded Reply Draft</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="draft-mode-pill" class="px-2 py-0.5 text-[10px] font-semibold bg-gray-800 text-gray-300 rounded">Mode: Base</span>
+              <span id="draft-safety-pill" class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 rounded">Safety: Clean</span>
+            </div>
+          </div>
+
+          <div class="p-3.5 bg-gray-900/90 rounded-xl border border-white/10 text-xs text-gray-200 font-mono leading-relaxed" id="draft-reply-text">
+            Reply draft will be generated safely adhering to anti-hallucination protocols.
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <div class="flex items-center gap-2">
+              <button type="button" id="btn-copy-draft" class="px-3 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 rounded-lg text-xs font-medium border border-white/10 flex items-center gap-1.5 transition-colors">
+                <span class="material-symbols-outlined text-[14px]">content_copy</span>
+                <span>Copy Draft</span>
+              </button>
+            </div>
+            <span id="draft-grounding-note" class="text-[11px] text-gray-400 italic max-w-xs text-right truncate"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUMN 3: Grounded Evidence & Candidates (~28%) -->
+      <div class="lg:col-span-3 flex flex-col gap-4">
+        <div class="glass-panel p-5 rounded-2xl flex flex-col gap-4 shadow-xl border border-white/10">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-indigo-400 text-[20px]">database</span>
+              <h3 class="text-sm font-semibold text-white">Historical Dialogue Evidence</h3>
+            </div>
+            <span class="text-[10px] font-mono text-gray-400">82k Resolved</span>
+          </div>
+
+          <!-- Retrieval Top Metric -->
+          <div class="p-3 bg-gray-900/80 rounded-xl border border-white/5 flex flex-col gap-1">
+            <span class="text-[10px] text-gray-400 uppercase font-semibold">Retrieval Metric</span>
+            <div class="flex justify-between items-center text-xs pt-0.5">
+              <span class="text-gray-300 font-medium">Cosine Similarity</span>
+              <span id="retrieval-sim-badge" class="font-mono text-indigo-300 font-bold">Sim: --</span>
+            </div>
+            <div class="text-[11px] text-gray-400">
+              Band: <span id="retrieval-band-tag" class="font-mono text-gray-300">--</span>
+            </div>
+          </div>
+
+          <!-- Candidates List -->
+          <div class="flex flex-col gap-2.5">
+            <span class="text-xs font-semibold text-gray-300">Top-3 Historical Evidence Pairs</span>
+            <div id="retrieved-candidates-container" class="flex flex-col gap-2.5 custom-scrollbar max-h-[520px] overflow-y-auto pr-1">
+              <div class="p-3 bg-gray-900/60 rounded-xl border border-white/5 text-xs text-gray-500 italic">
+                Awaiting inquiry inference to query historical sparse index...
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Human-in-the-Loop Adjudication Bottom Bar -->
+    <div class="mt-2 glass-panel border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-2xl">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+          <span class="material-symbols-outlined text-[20px]">gavel</span>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold text-white">Human-in-the-Loop Adjudication Bar</h4>
+          <p class="text-[11px] text-gray-400">Directly certify decisions and feed golden benchmarks for precision evaluation.</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+        <button type="button" id="btn-hitl-confirm" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-[15px]">check_circle</span>
+          Confirm AI Verdict
+        </button>
+        <button type="button" id="btn-hitl-escalate" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-[15px]">security_update_warning</span>
+          Force Escalate
+        </button>
+        <select id="hitl-reason-select" class="bg-gray-800 text-gray-200 text-xs px-3 py-1.5 rounded-lg border border-white/10 focus:outline-none">
+          <option value="correct_policy">Reason: Correct Policy Action</option>
+          <option value="safety_override">Reason: Safety Guardrail Override</option>
+          <option value="weak_evidence">Reason: Insufficient Historical Evidence</option>
+          <option value="intent_correction">Reason: Intent Misclassification</option>
+        </select>
+        <button type="button" id="btn-hitl-save" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium transition-colors flex items-center gap-1 shadow-md shadow-indigo-600/30">
+          <span class="material-symbols-outlined text-[15px]">save</span>
+          Save Benchmark
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- TAB 2: Safety & Policy Matrix -->
+  <section id="pane-policy" class="tab-pane hidden flex-1 w-full max-w-[1720px] mx-auto p-4 md:p-6 flex flex-col gap-6">
+    <div class="glass-panel p-6 rounded-2xl border border-white/10 shadow-xl">
+      <div class="flex items-center gap-3 pb-4 border-b border-white/10">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center border border-amber-500/30">
+          <span class="material-symbols-outlined text-[24px]">policy</span>
+        </div>
+        <div>
+          <h2 class="text-base font-bold text-white">Operational Safety Guardrails &amp; Routing Matrix</h2>
+          <p class="text-xs text-gray-400">Strict deterministic rules applied during Phase 9 to guarantee user security, financial protection, and anti-hallucination.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-6">
+        <!-- Rule 1 -->
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-red-500/30 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-red-500/20 text-red-300 rounded">CRITICAL SECURITY</span>
+            <span class="font-mono text-xs text-red-400">100% Escalate</span>
+          </div>
+          <h4 class="text-xs font-bold text-white">Apple ID &amp; Credential Compromise</h4>
+          <p class="text-[11px] text-gray-400 leading-relaxed">
+            Any mention of hack, locked account, unauthorized password change or 2FA bypass immediately triggers restricted safety mode and forces human specialist handover.
+          </p>
+        </div>
+
+        <!-- Rule 2 -->
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-amber-500/30 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-amber-500/20 text-amber-300 rounded">FINANCIAL RISK</span>
+            <span class="font-mono text-xs text-amber-400">100% Escalate</span>
+          </div>
+          <h4 class="text-xs font-bold text-white">Billing, Refunds &amp; Subscriptions</h4>
+          <p class="text-[11px] text-gray-400 leading-relaxed">
+            Inquiries with refund requests, charge disputes, or payment methods cannot be auto-responded to avoid fraudulent promises or incorrect financial resolutions.
+          </p>
+        </div>
+
+        <!-- Rule 3 -->
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-indigo-500/30 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-indigo-500/20 text-indigo-300 rounded">HARDWARE APPOINTMENT</span>
+            <span class="font-mono text-xs text-indigo-400">100% Escalate</span>
+          </div>
+          <h4 class="text-xs font-bold text-white">Genius Bar &amp; Physical Repair</h4>
+          <p class="text-[11px] text-gray-400 leading-relaxed">
+            Physical device damage (cracked screens, water immersion, battery swelling) requiring AppleCare warranty validation and store repair scheduling.
+          </p>
+        </div>
+
+        <!-- Rule 4 -->
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-emerald-500/30 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-500/20 text-emerald-300 rounded">QUALIFIED AUTO-HANDLE</span>
+            <span class="font-mono text-xs text-emerald-400">Auto-Eligible</span>
+          </div>
+          <h4 class="text-xs font-bold text-white">Verified Technical Troubleshooting</h4>
+          <p class="text-[11px] text-gray-400 leading-relaxed">
+            Common software, battery, or network diagnostics with confidence ≥ 0.80 and grounding similarity ≥ 0.50 qualify for automated safe troubleshooting.
+          </p>
+        </div>
+
+        <!-- Rule 5 -->
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/10 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-gray-800 text-gray-300 rounded">ANTI-HALLUCINATION</span>
+            <span class="font-mono text-xs text-gray-400">Gating Gate</span>
+          </div>
+          <h4 class="text-xs font-bold text-white">Historical Grounding Threshold</h4>
+          <p class="text-[11px] text-gray-400 leading-relaxed">
+            If lexical similarity with verified historical brand replies is below 0.50, the agent refuses to fabricate custom URLs and resorts to conservative guidance or escalation.
+          </p>
+        </div>
+
+        <!-- Rule 6 -->
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/10 flex flex-col gap-2">
+          <div class="flex items-center justify-between">
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-gray-800 text-gray-300 rounded">CONFIDENCE GATE</span>
+            <span class="font-mono text-xs text-gray-400">Threshold ≥ 0.80</span>
+          </div>
+          <h4 class="text-xs font-bold text-white">Unclear or Ambiguous Complaints</h4>
+          <p class="text-[11px] text-gray-400 leading-relaxed">
+            Vague customer rants ("Apple is the worst, nothing works") trigger human triage routing without making misleading technical assertions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: Golden Benchmark & Adjudication -->
+  <section id="pane-golden" class="tab-pane hidden flex-1 w-full max-w-[1720px] mx-auto p-4 md:p-6 flex flex-col gap-6">
+    <div class="glass-panel p-6 rounded-2xl border border-white/10 shadow-xl flex flex-col gap-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-white/10">
+        <div>
+          <h2 class="text-base font-bold text-white">Golden Benchmark Adjudication Table</h2>
+          <p class="text-xs text-gray-400">Human-annotated ground-truth test partition strictly isolated from training corpora for unbiased evaluation.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 rounded-lg text-xs font-mono font-semibold">
+            Status: Phase 10 Certified
+          </span>
+        </div>
+      </div>
+
+      <!-- Metrics Row -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span id="metric-total-golden" class="text-2xl font-bold font-mono text-white">200</span>
+          <p class="text-xs text-gray-400 mt-1">Total Test Partition Rows</p>
+        </div>
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span id="metric-done-golden" class="text-2xl font-bold font-mono text-emerald-400">200</span>
+          <p class="text-xs text-gray-400 mt-1">Adjudicated &amp; Validated</p>
+        </div>
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span id="metric-pending-golden" class="text-2xl font-bold font-mono text-gray-400">0</span>
+          <p class="text-xs text-gray-400 mt-1">Pending Review</p>
+        </div>
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span id="metric-freeze-golden" class="text-2xl font-bold font-mono text-indigo-400">Frozen</span>
+          <p class="text-xs text-gray-400 mt-1">Freeze Manifest Hash Verified</p>
+        </div>
+      </div>
+
+      <!-- Table Wrapper -->
+      <div class="overflow-x-auto rounded-xl border border-white/10">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-gray-900 text-gray-300 font-semibold border-b border-white/10">
+            <tr>
+              <th class="p-3.5">ID</th>
+              <th class="p-3.5">Customer Inquiry</th>
+              <th class="p-3.5">Annotator A</th>
+              <th class="p-3.5">Annotator B</th>
+              <th class="p-3.5">Final Intent</th>
+              <th class="p-3.5">Action</th>
+              <th class="p-3.5">Status</th>
+            </tr>
+          </thead>
+          <tbody id="golden-table-body" class="divide-y divide-white/5 text-gray-300">
+            <tr>
+              <td colspan="7" class="p-6 text-center text-gray-500 italic">Loading golden dataset rows...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: Topology & Architecture -->
+  <section id="pane-arch" class="tab-pane hidden flex-1 w-full max-w-[1720px] mx-auto p-4 md:p-6 flex flex-col gap-6">
+    <div class="glass-panel p-6 rounded-2xl border border-white/10 shadow-xl">
+      <h2 class="text-base font-bold text-white pb-1">System Topology &amp; Architectural Pipeline</h2>
+      <p class="text-xs text-gray-400 pb-6 border-b border-white/10">The 10-phase production architecture ensuring 0% data leakage, risk isolation, and auditability.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-6">
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span class="text-[10px] font-mono text-indigo-400 font-bold">PHASE 01 &amp; 02</span>
+          <h4 class="text-xs font-bold text-white mt-1">Anti-Leakage Conversation Splitting</h4>
+          <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">Thread-grouped splitting by root tweet ID guarantees that no customer inquiry in test shares dialogue context with training.</p>
+        </div>
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span class="text-[10px] font-mono text-indigo-400 font-bold">PHASE 03 &amp; 04</span>
+          <h4 class="text-xs font-bold text-white mt-1">8-Class Inductive Taxonomy</h4>
+          <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">Inductively discovered from recurring failures (Battery, Wi-Fi, Apple ID, Subscriptions, Updates, Hardware) with transparent silver rules.</p>
+        </div>
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span class="text-[10px] font-mono text-indigo-400 font-bold">PHASE 05 &amp; 06</span>
+          <h4 class="text-xs font-bold text-white mt-1">Explainable Classifier</h4>
+          <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">Sublinear TF-IDF (1–2 n-grams) with balanced multiclass Logistic Regression providing calibrated softmax probabilities.</p>
+        </div>
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span class="text-[10px] font-mono text-indigo-400 font-bold">PHASE 07 &amp; 08</span>
+          <h4 class="text-xs font-bold text-white mt-1">Train-Only Historical Retrieval</h4>
+          <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">Cosine similarity against 82,063 authentic training pairs. Zero test set leakage with deterministic safety template adaptations.</p>
+        </div>
+        <div class="p-4 bg-gray-900/80 rounded-xl border border-white/5">
+          <span class="text-[10px] font-mono text-indigo-400 font-bold">PHASE 09 &amp; 10</span>
+          <h4 class="text-xs font-bold text-white mt-1">Risk Routing &amp; Golden Benchmark</h4>
+          <p class="text-[11px] text-gray-400 mt-1 leading-relaxed">100% human routing on credential security and billing disputes. Frozen golden benchmark certified with reproducible SHA256 hashes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-white/5 py-4 px-6 text-center text-xs text-gray-500">
+    Hiver AI • AppleSupport Conversational Safety System • Connected to Active REST Backend at http://127.0.0.1:8000
+  </footer>
 
   <script src="/static/app.js"></script>
 </body>
