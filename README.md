@@ -1,4 +1,5 @@
 # Hiver Take-Home: Evidence-First Twitter Support Agent (`hiver_twitter_exploration`)
+<img width="1886" height="827" alt="image" src="https://github.com/user-attachments/assets/9bb4f22c-cf9a-4fdc-acff-832da82deb94" />
 
 An intentionally small, inspectable agent for **AppleSupport** tweets. It predicts an 8-way intent, retrieves similar historical resolutions, drafts a conservative reply, and either auto-handles or escalates with a visible reason. The point is not a clever model; it is a reproducible evaluation story with clear safety boundaries.
 
@@ -68,6 +69,7 @@ For per-class F1, see `outputs/final_evaluation/per_intent_metrics.csv`.
 For reply acceptance methodology, see [`docs/judge_rubric.md`](docs/judge_rubric.md).
 
 ---
+<img width="1908" height="853" alt="image" src="https://github.com/user-attachments/assets/76b5828b-f6c0-44d7-b7b8-b597ee319fa8" />
 
 ## Design
 
@@ -98,6 +100,8 @@ For reply acceptance methodology, see [`docs/judge_rubric.md`](docs/judge_rubric
 - This repository was developed with an AI coding assistant. All logic is compact enough to explain and modify live.
 
 ---
+<img width="1884" height="950" alt="image" src="https://github.com/user-attachments/assets/81922505-9ebd-47e5-adb5-293f3dd6ac6e" />
+
 
 
 ## The Core Mental Model (Crucial for Interviews)
@@ -119,6 +123,7 @@ Row 4 (Brand Tweet)     ───[in_response_to_tweet_id]───► Points to
 5. **We are NOT training AI yet**: We are proving that the dataset reliably yields high-quality `(Customer Query → Brand Response)` pairs. These pairs will become the ground-truth historical knowledge base for semantic retrieval and response generation in later phases.
 
 ---
+<img width="1919" height="662" alt="image" src="https://github.com/user-attachments/assets/c5d17b73-3b3b-4014-8f3d-99daf680cb41" />
 
 ## Project Structure
 
